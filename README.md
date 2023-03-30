@@ -1,2 +1,2 @@
-#  - App do Gilsepi, código código código..
+#  - App do Gilsepi, código código código...
 
