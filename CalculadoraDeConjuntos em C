@@ -1,0 +1,219 @@
+#include <stdio.h>
+#include <math.h>
+#include <stdlib.h>
+#define MAX 100
+
+int menu(){
+    int op;
+    printf("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+    do{
+    printf("\nCALCULADORA DE CONJUNTOS\n\n");
+    printf("1 - INSERIR CONJUNTOS A/B\n");
+    printf("2 - A U B\n");
+    printf("3 - A ∩ B\n");
+    printf("4 - A - B\n");
+    printf("5 - B - A\n");
+    printf("6 - A ∆ B\n");
+    printf("7 - A x B\n");
+    printf("0 - SAIR\n");
+    scanf("%d",&op);
+    }while((op<0) ||(op>7));
+    return op;
+}
+
+int validarTamanho(char x){
+    int n;
+    printf("Defina o tamanho do conjunto %c: ",x);
+    scanf("%d",&n);
+    while(n<0){
+        printf("Tamanho inválido. Digite novamente: \n");
+        scanf("%d",&n);
+    }
+    return n;
+}
+
+void imprimirVetor(int *vetor,char x,int y){
+    printf("conjunto %c = { ",x);
+    for(int cont = 0;cont<y;cont++){
+        printf("%d ",vetor[cont]);
+    }
+    printf("}\n\n");
+}
+
+int pesquisar (int *vetor, int qtde, int pesq) {
+    int i;
+    for (i = 0; i < (qtde); i++) {
+        if (vetor[i] == pesq){
+            return i;
+        }
+    }
+    return -1;
+}
+
+void validarElementos(int x,int *vetor){
+    int pesq;
+    for(int cont = 0;cont<x;cont++){
+        printf("Digite os elementos do conjunto: ");
+        scanf("%d",&vetor[cont]);
+        pesq = pesquisar(vetor,cont,vetor[cont]);
+        if (cont>0){
+            do{
+                if (pesq!=-1){
+                    printf("Número já inserido. Escolha outro: ");
+                    scanf("%d",&vetor[cont]);
+                    pesq = pesquisar(vetor,cont,vetor[cont]);
+                }
+            
+            }while(pesq!=-1);
+        }
+    }
+}
+
+void intersecao(int n, int m,int *vetorA,int *vetorB, int *vetorC,int *z){
+    int x;
+    for (int cont = 0;cont<n;cont++){
+        for (x=0;x<m;x++){
+            if (vetorA[cont] == vetorB[x]){
+                vetorC[*z] = vetorA[cont];
+                (*z)++;
+                break;
+            }
+        }
+    }
+}
+
+void uniao(int n, int m,int *vetorA,int *vetorB, int *vetorC,int *z){
+    int x,f,cont;
+    for (cont = 0;cont<n;cont++){
+        vetorC[cont]=vetorA[cont];
+        (*z)++;
+    }
+    for (cont = 0;cont<m;cont++){
+        f = 0;
+        for (x=0;x<*z;x++){
+            if (vetorB[cont] == vetorC[x]){
+                f = 1;
+                break;
+            }
+        }
+        if (f!=1){
+            vetorC[*z] = vetorB[cont];
+            (*z)++;
+        }
+        
+    }
+}
+
+void diferenca(int n, int m,int *vetorA,int *vetorB, int *vetorC,int *z){
+    int x,f;
+    for (int cont = 0;cont<n;cont++){
+        f = 0;
+        for (x=0;x<m;x++){
+            if (vetorA[cont] == vetorB[x]){
+                f = 1;
+                break;
+            }
+        }
+        if (f!=1){
+            vetorC[*z]=vetorA[cont];
+            (*z)++;
+        }
+    }
+
+}
+
+void parear(int n, int m,int *vetorA,int *vetorB){
+    printf("A x B conjunto = { ");
+    int x;
+    for (int cont = 0;cont<n;cont++){
+        for (x=0;x<m;x++){
+            printf("(%d,%d) ",vetorA[cont],vetorB[x]);
+        }
+    }
+    printf("}\n\n");
+}
+
+
+int main(){
+int n = 0,m = 0,z,op,conjuntoA[MAX],conjuntoB[MAX],conjuntoC[MAX];
+
+op = menu();
+do{
+    z=0;
+    switch(op){
+        case 0:
+            op = 0;
+            break;
+        case 1:
+            n = validarTamanho('A');
+            validarElementos(n,conjuntoA);
+            m = validarTamanho('B');
+            validarElementos(m,conjuntoB);
+            printf("\n\n");
+            imprimirVetor(conjuntoA,'A',n);
+            imprimirVetor(conjuntoB,'B',m);
+            system("read -p 'Precione Enter para continuar...' var");
+            op = menu();
+            break;
+        case 2:
+            uniao(n,m,conjuntoA,conjuntoB,conjuntoC,&z);
+            printf("\n\n");
+            imprimirVetor(conjuntoA,'A',n);
+            imprimirVetor(conjuntoB,'B',m);
+            printf("A U B ");
+            imprimirVetor(conjuntoC,' ',z);
+            system("read -p 'Precione Enter para continuar...' var");
+            op = menu();
+            break;
+        case 3:
+            intersecao(n,m,conjuntoA,conjuntoB,conjuntoC,&z);
+            printf("\n\n");
+            imprimirVetor(conjuntoA,'A',n);
+            imprimirVetor(conjuntoB,'B',m);
+            printf("A ∩ B ");
+            imprimirVetor(conjuntoC,' ',z);
+            system("read -p 'Precione Enter para continuar...' var");
+            op = menu();
+            break;
+        case 4:
+            diferenca(n,m,conjuntoA,conjuntoB,conjuntoC,&z);
+            printf("\n\n");
+            imprimirVetor(conjuntoA,'A',n);
+            imprimirVetor(conjuntoB,'B',m);
+            printf("A - B ");
+            imprimirVetor(conjuntoC,' ',z);
+            system("read -p 'Precione Enter para continuar...' var");
+            op = menu();
+            break;
+        case 5:
+            diferenca(m,n,conjuntoB,conjuntoA,conjuntoC,&z);
+            printf("\n\n");
+            imprimirVetor(conjuntoA,'A',n);
+            imprimirVetor(conjuntoB,'B',m);
+            printf("B - A ");
+            imprimirVetor(conjuntoC,' ',z);
+            system("read -p 'Precione Enter para continuar...' var");
+            op = menu();
+            break;
+        case 6:
+            diferenca(n,m,conjuntoA,conjuntoB,conjuntoC,&z);
+            diferenca(m,n,conjuntoB,conjuntoA,conjuntoC,&z);
+            printf("\n\n");
+            imprimirVetor(conjuntoA,'A',n);
+            imprimirVetor(conjuntoB,'B',m);
+            printf("A ∆ B ");
+            imprimirVetor(conjuntoC,' ',z);
+            system("read -p 'Precione Enter para continuar...' var");
+            op = menu();
+            break;
+        case 7:
+            printf("\n\n");
+            parear(n,m,conjuntoA,conjuntoB);
+            system("read -p 'Precione Enter para continuar...' var");
+            op = menu();
+            break;
+        }
+}while(op!=0);
+    
+return 0;
+}
